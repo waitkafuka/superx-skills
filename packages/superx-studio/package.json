@@ -1,0 +1,39 @@
+{
+  "name": "superx-studio",
+  "version": "1.0.18",
+  "description": "AI Agent Skill for SuperX (superx.chat) — generate images, videos, music, and speech in Claude Code, Codex, Cursor, WorkBuddy, and OpenClaw.",
+  "type": "module",
+  "bin": {
+    "superx-studio": "./bin/cli.mjs"
+  },
+  "files": [
+    "SKILL.md",
+    "README.md",
+    "install.sh",
+    "site.json",
+    "scripts",
+    "bin"
+  ],
+  "keywords": [
+    "agent-skill",
+    "claude-code",
+    "codex",
+    "openclaw",
+    "skills",
+    "superx",
+    "ai-image",
+    "ai-video",
+    "suno",
+    "midjourney"
+  ],
+  "homepage": "https://superx.chat/art/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/waitkafuka/superx-skills.git",
+    "directory": "skills/superx-studio"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "name": "aihuihua-studio",
+  "version": "1.0.18",
+  "description": "AI Agent Skill for 鼓鼓AI (aihuihua.ai) — generate images, videos, music, and speech in Claude Code, Codex, Cursor, WorkBuddy, and OpenClaw.",
+  "type": "module",
+  "bin": {
+    "aihuihua-studio": "./bin/cli.mjs"
+  },
+  "files": [
+    "SKILL.md",
+    "README.md",
+    "install.sh",
+    "site.json",
+    "scripts",
+    "bin"
+  ],
+  "keywords": [
+    "agent-skill",
+    "claude-code",
+    "codex",
+    "openclaw",
+    "skills",
+    "aihuihua",
+    "ai-image",
+    "ai-video",
+    "suno",
+    "midjourney"
+  ],
+  "homepage": "https://aihuihua.ai/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/waitkafuka/superx-skills.git",
+    "directory": "skills/aihuihua-studio"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  }
+}
