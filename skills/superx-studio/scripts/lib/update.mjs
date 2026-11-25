@@ -74,14 +74,16 @@ export async function latestManifest({ force = false } = {}) {
 /** 这份技能能不能被自动替换。返回空串表示可以，否则是原因 */
 export function cannotSelfUpdate(root = SKILL_ROOT) {
   if (process.env.STUDIO_NO_AUTO_UPDATE) return '设置了 STUDIO_NO_AUTO_UPDATE';
+  let target = root;
+  try { target = fs.realpathSync(root); } catch { /* 保持原路径 */ }
   // 源码仓库里构建出来的那份是开发者在改的东西，不能被线上旧版覆盖
-  if (fs.existsSync(path.join(root, '..', '..', 'build.mjs'))) return '这是技能源码仓库里的构建目录';
-  if (!fs.existsSync(path.join(root, 'SKILL.md'))) return `${root} 不像是技能目录`;
+  if (fs.existsSync(path.join(target, '..', '..', 'build.mjs'))) return '这是技能源码仓库里的构建目录';
+  if (!fs.existsSync(path.join(target, 'SKILL.md'))) return `${target} 不像是技能目录`;
   try {
-    fs.accessSync(path.dirname(root), fs.constants.W_OK);
-    fs.accessSync(root, fs.constants.W_OK);
+    fs.accessSync(path.dirname(target), fs.constants.W_OK);
+    fs.accessSync(target, fs.constants.W_OK);
   } catch {
-    return `${root} 没有写权限`;
+    return `${target} 没有写权限`;
   }
   return '';
 }
@@ -91,7 +93,8 @@ export function cannotSelfUpdate(root = SKILL_ROOT) {
  * 解到技能目录旁边：最后一步是 rename，同一个文件系统上才是原子的。
  */
 export async function installLatest(manifest, root = SKILL_ROOT) {
-  const parent = path.dirname(root);
+  const target = fs.realpathSync(root);
+  const parent = path.dirname(target);
   const stamp = `${process.pid}-${Date.now()}`;
   const work = path.join(parent, `.${SITE.name}-update-${stamp}`);
   const backup = path.join(parent, `.${SITE.name}-old-${stamp}`);
@@ -129,11 +132,11 @@ export async function installLatest(manifest, root = SKILL_ROOT) {
     }
     const version = localVersion(fresh);
 
-    fs.renameSync(root, backup);
+    fs.renameSync(target, backup);
     try {
-      fs.renameSync(fresh, root);
+      fs.renameSync(fresh, target);
     } catch (e) {
-      fs.renameSync(backup, root);
+      fs.renameSync(backup, target);
       throw e;
     }
     return version;

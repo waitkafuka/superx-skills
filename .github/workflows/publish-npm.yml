@@ -1,0 +1,36 @@
+name: Publish to npm
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Publish packages
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          for pkg in packages/superx-studio packages/aihuihua-studio; do
+            name=$(node -p "require('./$pkg/package.json').name")
+            ver=$(node -p "require('./$pkg/package.json').version")
+            if npm view "${name}@${ver}" version >/dev/null 2>&1; then
+              echo "Skip ${name}@${ver} (already published)"
+            else
+              echo "Publishing ${name}@${ver}..."
+              (cd "$pkg" && npm publish --access public --provenance)
+            fi
+          done
